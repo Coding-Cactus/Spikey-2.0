@@ -34,7 +34,7 @@ class Spikey
 		# cache messages for logs
 		
 		@cached_messages = {}
-		@client.message { |event| @cached_messages[event.message.id] = event.message }
+		@client.message { |event| @cached_messages[event.message.id] = event.message if event.message.server != nil }
 
 
 		# event handling
