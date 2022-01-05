@@ -2,7 +2,7 @@ class Spikey
 	def ready
 		self.watching = "you."
 
-		current_db_servers  = @servers.find.map { |doc|doc[:_id] }
+		current_db_servers  = @servers.find.map { |doc| doc[:_id] }
 		current_bot_servers = @client.servers.map { |id, _| id }
 
 		add_servers    = current_bot_servers.reject { |id| current_db_servers.include?(id) }
