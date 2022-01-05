@@ -35,54 +35,35 @@ class Spikey
 		
 		@cached_messages = {}
 		@client.message { |event| @cached_messages[event.message.id] = event.message }
+
+
+		# event handling
+
+		@client.ready { ready }
+
+		@client.server_create { |event| joined_server(event) }
+		@client.server_delete { |event|  left_server(event)  }
+
+		@client.member_join  { |event| log_member_joined(event) }
+		@client.member_leave { |event|  log_member_left(event)  }
+
+		@client.user_ban   { |event|  log_member_ban(event)  }
+		@client.user_unban { |event| log_member_unban(event) }
+
+		@client.message_edit   { |event|  log_message_edit(event)  }
+		@client.message_delete { |event| log_message_delete(event) }
+
+
+		# command handling
+
+		command(:help, max_args: 1) { |event, category| help(event, category) }
+
+		command(:config_logs, max_args: 1) { |event, channel| config_logs(event, channel) }
 	end
 
 	def run
 		@client.run
 	end
-
-
-	def on_ready
-		@client.ready { yield }
-	end
-
-	def server_create
-		@client.server_create { |event| yield event }
-	end
-
-	def server_delete
-		@client.server_delete { |event| yield event }
-	end
-
-	def member_join
-		@client.member_join { |event| yield event }
-	end
-
-	def member_leave
-		@client.member_leave { |event| yield event }
-	end
-
-	def member_banned
-		@client.user_ban { |event| yield event }
-	end
-
-	def member_unbanned
-		@client.user_unban { |event| yield event }
-	end
-
-	def message_edit
-		@client.message_edit { |event| yield event }
-	end
-
-	def message_delete
-		@client.message_delete { |event| yield event }
-	end
-
-
-	def watching=(activity)
-		@client.watching = activity
-	end
-
 
 	def command(name, options={})
 		@client.command(name, options) do |event, arguments|
