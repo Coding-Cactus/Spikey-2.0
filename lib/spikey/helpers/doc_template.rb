@@ -3,7 +3,8 @@ class Spikey
 
 	def doc_template(server_id)
 		{
-			_id: server_id
+			_id: server_id,
+			log_channel: nil
 		}
 	end
 end

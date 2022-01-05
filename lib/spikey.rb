@@ -1,8 +1,11 @@
-require_relative "spikey/help"
-require_relative "spikey/ready"
-require_relative "spikey/left_server"
-require_relative "spikey/doc_template"
-require_relative "spikey/joined_server"
+require_relative "spikey/events/ready"
+require_relative "spikey/events/left_server"
+require_relative "spikey/events/joined_server"
+
+require_relative "spikey/commands/help"
+
+require_relative "spikey/helpers/doc_template"
+
 
 class Spikey
 	PREFIX = "+"
