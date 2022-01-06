@@ -23,8 +23,19 @@ class Spikey
 			server.members.each do |member|
 				if member.id == user || "#{member.username}##{member.discrim}" == user || member.display_name == user
 					member_id = member.id.to_s
-					reason = "No reason specified" if reason.to_s.gsub(" ", "") == ""
-
+					reason = "No reason specified" if reason.to_s.gsub(" ", "") == ""					
+					
+					if reason.length > 1000
+						return event.send_embed(
+							nil,
+							embed = Discordrb::Webhooks::Embed.new(
+								title: "Reason Too Large!",
+								description: "The reason for the warning must be less than 1000 characters.",
+								colour: "cc0000".to_i(16),
+								timestamp: Time.new
+							)
+						)
+					end
 					
 					# message in channel
 					
