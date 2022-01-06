@@ -3,7 +3,7 @@ class Spikey
 		server     = event.server
 		server_id  = server.id
 
-		unless  event.author.defined_permission?(:administrator) || event.author.defined_permission?(:manage_messages) || server.owner == event.user
+		unless event.author.defined_permission?(:administrator) || event.author.defined_permission?(:manage_messages) || server.owner == event.user
 			return event.send_embed(
 				"",
 				Discordrb::Webhooks::Embed.new(
