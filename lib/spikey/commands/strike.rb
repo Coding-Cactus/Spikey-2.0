@@ -61,6 +61,8 @@ class Spikey
 						event.send_message("Unable to message user.")
 					end
 
+
+					# log strike
 					
 					log_channel = @servers.find({ _id: server_id }).first[:log_channel]
 
@@ -69,7 +71,7 @@ class Spikey
 							title: "User Struck!",
 							colour: "00cc00".to_i(16),
 							timestamp: Time.new,
-							thumbnail: Discordrb::Webhooks::EmbedThumbnail.new(url: server.icon_url)
+							thumbnail: Discordrb::Webhooks::EmbedThumbnail.new(url: member.avatar_url)
 						)
 						embed.add_field(name: "Moderator", value: "<@#{event.user.id}> (#{event.user.username}##{event.user.discriminator})")
 						embed.add_field(name: "User", value: "<@#{member.id}> (#{member.username}##{member.discriminator})")
