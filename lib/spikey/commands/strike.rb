@@ -21,7 +21,7 @@ class Spikey
 			end
 	
 			server.members.each do |member|
-				if member.id == user || "#{member.username}##{member.discrim}" == user || member.nickname == user
+				if member.id == user || "#{member.username}##{member.discrim}" == user || member.display_name == user
 					member_id = member.id.to_s
 					reason = "No reason specified" if reason.to_s.gsub(" ", "") == ""
 
