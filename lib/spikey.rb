@@ -11,6 +11,7 @@ require_relative "spikey/logs/message_delete"
 
 require_relative "spikey/commands/help"
 require_relative "spikey/commands/warn"
+require_relative "spikey/commands/strike"
 require_relative "spikey/commands/config_logs"
 
 require_relative "spikey/helpers/doc_template"
@@ -61,7 +62,8 @@ class Spikey
 
 		command(:config_logs, max_args: 1) { |event, channel| config_logs(event, channel) }
 
-		command(:warn, min_args: 1) { |event, user, *reason| warn(event, user, reason.join(" ")) }
+		command(:warn, min_args: 1)   { |event, user, *reason|  warn(event, user, reason.join(" "))  }
+		command(:strike, min_args: 1) { |event, user, *reason| strike(event, user, reason.join(" ")) }
 	end
 
 	def run
