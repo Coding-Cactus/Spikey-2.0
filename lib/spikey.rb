@@ -10,6 +10,7 @@ require_relative "spikey/logs/message_edit"
 require_relative "spikey/logs/message_delete"
 
 require_relative "spikey/commands/help"
+require_relative "spikey/commands/warn"
 require_relative "spikey/commands/config_logs"
 
 require_relative "spikey/helpers/doc_template"
@@ -59,6 +60,8 @@ class Spikey
 		command(:help, max_args: 1) { |event, category| help(event, category) }
 
 		command(:config_logs, max_args: 1) { |event, channel| config_logs(event, channel) }
+
+		command(:warn, min_args: 1) { |event, user, *reason| warn(event, user, reason.join(" ")) }
 	end
 
 	def run
@@ -66,9 +69,9 @@ class Spikey
 	end
 
 	def command(name, options={})
-		@client.command(name, options) do |event, arguments|
-			event.channel.start_typing
-			yield event, arguments
+		@client.command(name, options) do |event, *args|
+			Thread.new { event.channel.start_typing }
+			yield event, *args
 		end
 	end
 end
