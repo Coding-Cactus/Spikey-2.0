@@ -59,6 +59,8 @@ class Spikey
 
 		# command handling
 
+		command(:ping) { |_| "pong" }
+
 		command(:help, max_args: 1) { |event, category| help(event, category) }
 
 		command(:config_logs, max_args: 1) { |event, channel| config_logs(event, channel) }
