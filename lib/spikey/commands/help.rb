@@ -81,7 +81,7 @@ class Spikey
 			)
 			embed.add_field(
 				name: "strike",
-				value: "sStrike a member for being naughty.\nIn the form `+strike Member <reason>`."
+				value: "Strike a member for being naughty.\nIn the form `+strike Member <reason>`."
 			)
 			embed.add_field(
 				name: "infractions",
