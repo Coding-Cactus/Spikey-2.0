@@ -14,6 +14,7 @@ require_relative "spikey/commands/warn"
 require_relative "spikey/commands/strike"
 require_relative "spikey/commands/infractions"
 require_relative "spikey/commands/config_logs"
+require_relative "spikey/commands/config_auto_strike"
 
 require_relative "spikey/helpers/doc_template"
 
@@ -64,6 +65,7 @@ class Spikey
 		command(:help, max_args: 1) { |event, category| help(event, category) }
 
 		command(:config_logs, max_args: 1) { |event, channel| config_logs(event, channel) }
+		command(:config_auto_strike, max_args: 1) { |event, channel| config_auto_strike(event, channel) }
 
 		command(:warn, min_args: 1)   { |event, user, *reason|  warn(event, user, reason.join(" "))  }
 		command(:strike, min_args: 1) { |event, user, *reason| strike(event, user, reason.join(" ")) }

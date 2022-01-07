@@ -36,8 +36,13 @@ class Spikey
 							)
 						)
 					end
+
+					server_data = @servers.find({ _id: server_id }).first
 					
-					# message in channel
+					log_channel = server_data[:log_channel]
+				
+					
+					# message in channel & logs
 					
 					embed = Discordrb::Webhooks::Embed.new(
 						title: "User Warned!",
@@ -45,6 +50,7 @@ class Spikey
 						timestamp: Time.new,
 						thumbnail: Discordrb::Webhooks::EmbedThumbnail.new(url: member.avatar_url)
 					)
+						embed.add_field(name: "Moderator", value: "<@#{event.user.id}> (#{event.user.username}##{event.user.discriminator})")
 					embed.add_field(name: "User", value: "<@#{member.id}> (#{member.username}##{member.discriminator})")
 					embed.add_field(name: "Reason", value: reason)
 
@@ -53,8 +59,20 @@ class Spikey
 					rescue
 						nil
 					end
-					
 
+					unless log_channel == nil
+						begin							
+							@client.send_message(log_channel, nil, false, embed)
+						rescue
+							begin
+								event.send_message("Failed to log warning.")
+							rescue
+								nil
+							end
+						end
+					end
+						
+					
 					# message to user
 					
 					embed = Discordrb::Webhooks::Embed.new(
@@ -69,42 +87,68 @@ class Spikey
 					begin
 						member.pm.send_embed(nil, embed)
 					rescue
-						event.send_message("Unable to message user.")
-					end
-
-
-					# log warning
-					
-					log_channel = @servers.find({ _id: server_id }).first[:log_channel]
-
-					unless log_channel == nil
-						embed = Discordrb::Webhooks::Embed.new(
-							title: "User Warned!",
-							colour: "00cc00".to_i(16),
-							timestamp: Time.new,
-							thumbnail: Discordrb::Webhooks::EmbedThumbnail.new(url: member.avatar_url)
-						)
-						embed.add_field(name: "Moderator", value: "<@#{event.user.id}> (#{event.user.username}##{event.user.discriminator})")
-						embed.add_field(name: "User", value: "<@#{member.id}> (#{member.username}##{member.discriminator})")
-						embed.add_field(name: "Reason", value: reason)
-
 						begin
-							@client.send_message(log_channel, nil, false, embed)
-						rescue							
-							event.send_message("Failed to log warning.")
+							event.send_message("Unable to message user.")
+						rescue
+							nil
 						end
 					end
-
 					
 					
-					infractions = @servers.find({ _id: server_id }).first[:infractions][member_id]
+					infractions = server_data[:infractions][member_id]
 					infractions ||= { warns: {}, stikes: {} }
 
 					next_id = infractions[:warns].reduce(0) { |biggest, (id, _)| [biggest, id.to_i].max } + 1
 
 					infractions[:warns][next_id] = reason
 
-					@servers.update_one({ _id: server_id }, { "$set" => { "infractions.#{member_id}" => infractions } })
+					@servers.update_one({ _id: server_id }, { "$set" => { "infractions.#{member_id}" => infractions } })					
+
+					
+					# auto strike
+					
+					auto_strike = server_data[:auto_strike]
+					
+					if auto_strike != 0 && infractions[:warns].length % auto_strike == 0
+						begin
+							member.pm.send_embed(
+								nil,
+								Discordrb::Webhooks::Embed.new(
+									title: "You've Been Automatically Struck!",
+									description: "You've been struck automatically after recieving **#{auto_strike}** warning#{auto_strike == 1 ? "" : "s"}.",
+									colour: "00cc00".to_i(16),
+									timestamp: Time.new,
+									thumbnail: Discordrb::Webhooks::EmbedThumbnail.new(url: server.icon_url)
+								)
+							)
+						rescue
+							nil
+						end
+
+						
+						embed = Discordrb::Webhooks::Embed.new(
+							title: "Member Automatically Struck!",
+							description: "<@#{member.id}> (#{member.username}##{member.discriminator}) has been struck automatically after recieving **#{auto_strike}** warning#{auto_strike == 1 ? "" : "s"}.",
+							colour: "00cc00".to_i(16),
+							timestamp: Time.new,
+							thumbnail: Discordrb::Webhooks::EmbedThumbnail.new(url: member.avatar_url)
+						)
+
+						begin
+							event.send_embed("", embed)
+						rescue
+							nil
+						end
+						
+						unless log_channel == nil
+							begin			
+								@client.send_message(log_channel, nil, false, embed)
+							rescue
+								nil
+							end
+						end
+					end
+					
 					return
 				end
 			end

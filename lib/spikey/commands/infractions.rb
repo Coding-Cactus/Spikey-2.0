@@ -65,11 +65,23 @@ class Spikey
 			thumbnail: Discordrb::Webhooks::EmbedThumbnail.new(url: event.server.icon_url)
 		)
 
-		infractions = @servers.find({ _id: event.server.id }).first[:infractions][user.id.to_s]		
+		server_data = @servers.find({ _id: event.server.id }).first
+		infractions = server_data[:infractions][user.id.to_s]
+		
 		warnings = infractions[:warns]
 		strikes  = infractions[:strikes]
+		
+		auto_strike = server_data[:auto_strike]
 
-		embed.add_field(name: "Overview", value: "Server: **#{event.server.name}**\nWarnings: **#{warnings.length}**\nStrikes: **#{strikes.length}**")
+		if auto_strike == 0
+			auto_strikes = 0
+			auto_strike_msg = ""
+		else
+			auto_strikes = warnings.length / auto_strike		
+			auto_strike_msg = "\nAutomatic Strikes: **#{auto_strikes}**"
+		end
+
+		embed.add_field(name: "Overview", value: "Server: **#{event.server.name}**\nWarnings: **#{warnings.length}**\nStrikes: **#{strikes.length + auto_strikes}**#{auto_strike_msg}")
 		
 		
 		warnings_msgs = [""]
@@ -104,7 +116,6 @@ class Spikey
 			warnings_msgs = warnings_msgs[1..-1]
 			strikes_msgs = strikes_msgs[1..-1]
 
-
 			(warnings_msgs.length > strikes_msgs.length ? warnings_msgs : strikes_msgs).each_index do |index|
 				embed = Discordrb::Webhooks::Embed.new(
 					colour: "00cc00".to_i(16),
@@ -115,7 +126,7 @@ class Spikey
 				embed.add_field(name: "Warnings", value: warnings_msgs[index], inline: true) if warnings_msgs[index].to_s != ""
 				embed.add_field(name: "Strikes",  value: strikes_msgs[index],  inline: true) if strikes_msgs[index].to_s != ""
 
-				Thread.new { event.user.pm.send_embed(nil, embed) }
+				event.user.pm.send_embed(nil, embed)
 			end
 		
 			return event.send_message("Check your DMs :wink:")

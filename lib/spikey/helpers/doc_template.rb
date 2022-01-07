@@ -5,7 +5,8 @@ class Spikey
 		{
 			_id: server_id,
 			log_channel: nil,
-			infractions: {}
+			infractions: {},
+			auto_strike: 0
 		}
 	end
 end
