@@ -25,6 +25,7 @@ require_relative "spikey/commands/repealing/repeal_warn"
 require_relative "spikey/commands/repealing/repeal_strike"
 
 require_relative "spikey/commands/muting/mute"
+require_relative "spikey/commands/muting/unmute"
 
 require_relative "spikey/helpers/check_mutes"
 require_relative "spikey/helpers/parse_time"
@@ -93,6 +94,7 @@ class Spikey
 		command(:repeal_strike, min_args: 2, max_args: 2) { |event, user, strikeID| repeal_strike(event, user, strikeID) }
 		
 		command(:mute, min_args: 1, max_args: 2) { |event, user, duration| mute(event, user, duration) }
+		command(:unmute, min_args: 1, max_args: 1) { |event, user| unmute(event, user) }
 	end
 
 	def run

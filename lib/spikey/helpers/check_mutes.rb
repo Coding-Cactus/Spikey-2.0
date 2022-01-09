@@ -5,7 +5,7 @@ class Spikey
 			[
 				data[:_id],
 				{
-					unmute: data[:muted].select { |_, end_time| end_time < time },
+					unmute: data[:muted].select { |_, end_time| end_time != nil && end_time < time },
 					mute_role: data[:mute_role],
 					mod_log_channel: data[:mod_log_channel]
 				}
