@@ -50,7 +50,7 @@ class Spikey
 						timestamp: Time.new,
 						thumbnail: Discordrb::Webhooks::EmbedThumbnail.new(url: member.avatar_url)
 					)
-						embed.add_field(name: "Moderator", value: "<@#{event.user.id}> (#{event.user.username}##{event.user.discriminator})")
+					embed.add_field(name: "Moderator", value: "<@#{event.user.id}> (#{event.user.username}##{event.user.discriminator})")
 					embed.add_field(name: "User", value: "<@#{member.id}> (#{member.username}##{member.discriminator})")
 					embed.add_field(name: "Reason", value: reason)
 
