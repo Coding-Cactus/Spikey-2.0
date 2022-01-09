@@ -8,7 +8,9 @@ class Spikey
 			mod_log_channel: nil,
 			infractions: {},
 			auto_ban: 0,
-			auto_strike: 0
+			auto_strike: 0,
+			mute_role: nil,
+			muted: {}
 		}
 	end
 end

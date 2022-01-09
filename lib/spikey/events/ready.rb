@@ -34,5 +34,13 @@ class Spikey
 		end
 
 		Mongo::BulkWrite.new(@servers, requests).execute
+
+		
+		Thread.new do
+			loop do
+				check_mutes
+				sleep 10
+			end
+		end
 	end
 end

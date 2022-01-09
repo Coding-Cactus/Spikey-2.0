@@ -11,6 +11,7 @@ require_relative "spikey/logs/message_delete"
 
 require_relative "spikey/commands/help"
 
+require_relative "spikey/commands/configuration/config_mute"
 require_relative "spikey/commands/configuration/config_logs"
 require_relative "spikey/commands/configuration/config_mod_logs"
 require_relative "spikey/commands/configuration/config_auto_ban"
@@ -23,6 +24,11 @@ require_relative "spikey/commands/infractions/infractions"
 require_relative "spikey/commands/repealing/repeal_warn"
 require_relative "spikey/commands/repealing/repeal_strike"
 
+require_relative "spikey/commands/muting/mute"
+
+require_relative "spikey/helpers/check_mutes"
+require_relative "spikey/helpers/parse_time"
+require_relative "spikey/helpers/display_time"
 require_relative "spikey/helpers/doc_template"
 
 
@@ -71,6 +77,8 @@ class Spikey
 
 		command(:help, max_args: 1) { |event, category| help(event, category) }
 
+		command(:config_mute, max_args: 1) { |event, role| config_mute(event, role) }
+		
 		command(:config_logs, max_args: 1) { |event, channel| config_logs(event, channel) }
 		command(:config_mod_logs, max_args: 1) { |event, channel| config_mod_logs(event, channel) }
 		
@@ -83,6 +91,8 @@ class Spikey
 		
 		command(:repeal_warn, min_args: 2, max_args: 2)   { |event, user, warnID| repeal_warn(event, user, warnID) }
 		command(:repeal_strike, min_args: 2, max_args: 2) { |event, user, strikeID| repeal_strike(event, user, strikeID) }
+		
+		command(:mute, min_args: 1, max_args: 2) { |event, user, duration| mute(event, user, duration) }
 	end
 
 	def run
