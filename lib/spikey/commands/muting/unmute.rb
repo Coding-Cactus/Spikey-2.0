@@ -16,6 +16,7 @@ class Spikey
 		end
 
 		server_data = @servers.find({ _id: server_id }).first
+		muted       = server_data[:muted]
 		muted_role  = server_data[:mute_role]
 		log_channel = server_data[:mod_log_channel]
 
@@ -38,7 +39,6 @@ class Spikey
 			user = user.split("<@")[1][0...-1].to_i
 		end
 
-		muted = @servers.find({ _id: server_id }).first[:muted]
 
 		server.members.each do |member|
 			if member.id == user || "#{member.username}##{member.discrim}" == user || member.display_name == user
