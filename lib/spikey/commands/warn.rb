@@ -108,6 +108,7 @@ class Spikey
 					# auto strike
 					
 					auto_strike = server_data[:auto_strike]
+					auto_ban    = server_data[:auto_ban]
 					
 					if auto_strike != 0 && infractions[:warns].length % auto_strike == 0
 						begin
@@ -143,6 +144,43 @@ class Spikey
 						unless log_channel == nil
 							begin			
 								@client.send_message(log_channel, nil, false, embed)
+							rescue
+								nil
+							end
+						end
+					end
+				
+
+					strike_count = infractions[:strikes].length + (auto_strike == 0 ? 0 : infractions[:warns].length / auto_strike)
+
+					if auto_ban != 0 && strike_count >= auto_ban
+						begin
+							server.ban(member_id, 0, reason: "Automatically banned for reaching the strike limit.")
+							
+							embed = Discordrb::Webhooks::Embed.new(
+								title: "Member Automatically Banned!",
+								description: "<@#{member.id}> (#{member.username}##{member.discriminator}) has been banned automatically after recieving **#{strike_count}/#{auto_ban}** strike#{strike_count == 1 ? "" : "s"}.",
+								colour: "00cc00".to_i(16),
+								timestamp: Time.new,
+								thumbnail: Discordrb::Webhooks::EmbedThumbnail.new(url: member.avatar_url)
+							)										
+	
+							begin
+								event.send_embed("", embed)
+							rescue
+								nil
+							end
+							
+							unless log_channel == nil
+								begin			
+									@client.send_message(log_channel, nil, false, embed)
+								rescue
+									nil
+								end
+							end
+						rescue
+							begin
+								event.send_message("Unable to ban member, however they have reached the strike limit. Make sure to ban this member yourself, and give me permissions for next time.")
 							rescue
 								nil
 							end

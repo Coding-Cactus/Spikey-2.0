@@ -81,7 +81,10 @@ class Spikey
 			auto_strike_msg = "\nAutomatic Strikes: **#{auto_strikes}**"
 		end
 
-		embed.add_field(name: "Overview", value: "Server: **#{event.server.name}**\nWarnings: **#{warnings.length}**\nStrikes: **#{strikes.length + auto_strikes}**#{auto_strike_msg}")
+		embed.add_field(
+			name: "Overview",
+			value: "Server: **#{event.server.name}**\nWarnings: **#{warnings.length}**\nStrikes: **#{strikes.length + auto_strikes}#{server_data[:auto_ban] == 0 ? "" : "/#{server_data[:auto_ban]}"}**#{auto_strike_msg}"
+		)
 		
 		
 		warnings_msgs = [""]
