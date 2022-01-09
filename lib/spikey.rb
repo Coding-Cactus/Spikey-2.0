@@ -10,13 +10,15 @@ require_relative "spikey/logs/message_edit"
 require_relative "spikey/logs/message_delete"
 
 require_relative "spikey/commands/help"
-require_relative "spikey/commands/warn"
-require_relative "spikey/commands/strike"
-require_relative "spikey/commands/infractions"
-require_relative "spikey/commands/config_logs"
-require_relative "spikey/commands/config_mod_logs"
-require_relative "spikey/commands/config_auto_ban"
-require_relative "spikey/commands/config_auto_strike"
+
+require_relative "spikey/commands/configuration/config_logs"
+require_relative "spikey/commands/configuration/config_mod_logs"
+require_relative "spikey/commands/configuration/config_auto_ban"
+require_relative "spikey/commands/configuration/config_auto_strike"
+
+require_relative "spikey/commands/infractions/warn"
+require_relative "spikey/commands/infractions/strike"
+require_relative "spikey/commands/infractions/infractions"
 
 require_relative "spikey/helpers/doc_template"
 
