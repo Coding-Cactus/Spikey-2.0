@@ -21,6 +21,7 @@ require_relative "spikey/commands/infractions/strike"
 require_relative "spikey/commands/infractions/infractions"
 
 require_relative "spikey/commands/repealing/repeal_warn"
+require_relative "spikey/commands/repealing/repeal_strike"
 
 require_relative "spikey/helpers/doc_template"
 
@@ -80,7 +81,8 @@ class Spikey
 		command(:strike, min_args: 1) { |event, user, *reason| strike(event, user, reason.join(" ")) }
 		command(:infractions, max_args: 1) { |event, user| infractions(event, user) }
 		
-		command(:repeal_warn, min_args: 2, max_args: 2) { |event, user, warnID| repeal_warn(event, user, warnID) }
+		command(:repeal_warn, min_args: 2, max_args: 2)   { |event, user, warnID| repeal_warn(event, user, warnID) }
+		command(:repeal_strike, min_args: 2, max_args: 2) { |event, user, strikeID| repeal_strike(event, user, strikeID) }
 	end
 
 	def run
