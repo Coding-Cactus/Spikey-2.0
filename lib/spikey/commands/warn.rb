@@ -39,7 +39,7 @@ class Spikey
 
 					server_data = @servers.find({ _id: server_id }).first
 					
-					log_channel = server_data[:log_channel]
+					log_channel = server_data[:mod_log_channel]
 				
 					
 					# message in channel & logs

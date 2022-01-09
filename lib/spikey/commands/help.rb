@@ -44,6 +44,10 @@ class Spikey
 				value: "Choose to which channel I should send the logs.\nIn the form `+config_logs TextChannel`."
 			)
 			embed.add_field(
+				name: "config_mod_logs",
+				value: "Choose to which channel I should send the moderation logs.\nIn the form `+config_mod_logs TextChannel`."
+			)
+			embed.add_field(
 				name: "config_mute",
 				value: "Choose which role to be addded to a member when muted.\nIn the form `+config_mute Role`."
 			)

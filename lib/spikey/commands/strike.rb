@@ -37,8 +37,12 @@ class Spikey
 						)
 					end
 
+
+					server_data = @servers.find({ _id: server_id }).first
 					
-					# message in channel
+					log_channel = server_data[:mod_log_channel]
+					
+					# message in channel & logs
 					
 					embed = Discordrb::Webhooks::Embed.new(
 						title: "User Struck!",
@@ -46,6 +50,7 @@ class Spikey
 						timestamp: Time.new,
 						thumbnail: Discordrb::Webhooks::EmbedThumbnail.new(url: member.avatar_url)
 					)
+						embed.add_field(name: "Moderator", value: "<@#{event.user.id}> (#{event.user.username}##{event.user.discriminator})")
 					embed.add_field(name: "User", value: "<@#{member.id}> (#{member.username}##{member.discriminator})")
 					embed.add_field(name: "Reason", value: reason)
 
@@ -53,6 +58,18 @@ class Spikey
 						event.send_embed("", embed)
 					rescue
 						nil
+					end
+
+					unless log_channel == nil
+						begin							
+							@client.send_message(log_channel, nil, false, embed)
+						rescue
+							begin
+								event.send_message("Failed to log warning.")
+							rescue
+								nil
+							end
+						end
 					end
 					
 
@@ -73,31 +90,6 @@ class Spikey
 						event.send_message("Unable to message user.")
 					end
 
-
-					# log strike
-					
-					log_channel = @servers.find({ _id: server_id }).first[:log_channel]
-
-					unless log_channel == nil
-						embed = Discordrb::Webhooks::Embed.new(
-							title: "User Struck!",
-							colour: "00cc00".to_i(16),
-							timestamp: Time.new,
-							thumbnail: Discordrb::Webhooks::EmbedThumbnail.new(url: member.avatar_url)
-						)
-						embed.add_field(name: "Moderator", value: "<@#{event.user.id}> (#{event.user.username}##{event.user.discriminator})")
-						embed.add_field(name: "User", value: "<@#{member.id}> (#{member.username}##{member.discriminator})")
-						embed.add_field(name: "Reason", value: reason)
-
-						begin
-							@client.send_message(log_channel, nil, false, embed)
-						rescue							
-							event.send_message("Failed to log strike.")
-						end
-					end
-
-					
-					server_data = @servers.find({ _id: server_id }).first
 					
 					infractions = server_data[:infractions][member_id]
 					infractions ||= { warns: {}, strikes: {} }
