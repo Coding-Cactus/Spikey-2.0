@@ -9,7 +9,7 @@ class Spikey
 
 		if duration.include?(".")
 			return nil if duration.to_f.to_s != duration
-		else		
+		else
 			return nil if duration.to_i.to_s != duration
 		end
 

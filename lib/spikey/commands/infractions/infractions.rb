@@ -1,5 +1,5 @@
 class Spikey
-	def infractions(event, user)		
+	def infractions(event, user)
 		if event.channel.pm?
 			return event.send_embed(
 				"",
@@ -16,19 +16,7 @@ class Spikey
 		if user == nil
 			user = event.user
 		elsif event.author.defined_permission?(:administrator) || event.author.defined_permission?(:manage_messages) || event.server.owner == event.user
-			if user.to_i.to_s == user
-				user = user.to_i
-			elsif user.include?("<@") && user.split("<@")[1][0...-1].to_i.to_s == user.split("<@")[1][0...-1]
-				user = user.split("<@")[1][0...-1].to_i
-			end
-
-			u = nil
-			event.server.members.each do |member|
-				if member.id == user || "#{member.username}##{member.discrim}" == user || member.display_name == user
-					u = member
-					break
-				end
-			end
+			u = get_member(user, event.server)
 
 			if u == nil
 				return event.send_embed(
@@ -43,7 +31,7 @@ class Spikey
 			end
 
 			user = u
-		else			
+		else
 			return event.send_embed(
 				"",
 				Discordrb::Webhooks::Embed.new(
@@ -61,7 +49,7 @@ class Spikey
 			title: title,
 			colour: "00cc00".to_i(16),
 			timestamp: Time.new,
-			footer: Discordrb::Webhooks::EmbedFooter.new(text: "Page 1"),			
+			footer: Discordrb::Webhooks::EmbedFooter.new(text: "Page 1"),
 			thumbnail: Discordrb::Webhooks::EmbedThumbnail.new(url: event.server.icon_url)
 		)
 
@@ -77,7 +65,7 @@ class Spikey
 			auto_strikes = 0
 			auto_strike_msg = ""
 		else
-			auto_strikes = warnings.length / auto_strike		
+			auto_strikes = warnings.length / auto_strike
 			auto_strike_msg = "\nAutomatic Strikes: **#{auto_strikes}**"
 		end
 

@@ -26,7 +26,7 @@ class Spikey
 			)
 
 			@servers.update_one({ _id: server_id }, { "$set" => { auto_strike: 0 } })
-		else			
+		else
 			if count.to_i.to_s == count && count.to_i > 0
 				count = count.to_i
 			

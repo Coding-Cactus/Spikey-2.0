@@ -27,6 +27,9 @@ require_relative "spikey/commands/repealing/repeal_strike"
 require_relative "spikey/commands/muting/mute"
 require_relative "spikey/commands/muting/unmute"
 
+require_relative "spikey/helpers/get_role"
+require_relative "spikey/helpers/get_member"
+require_relative "spikey/helpers/get_channel"
 require_relative "spikey/helpers/check_mutes"
 require_relative "spikey/helpers/parse_time"
 require_relative "spikey/helpers/display_time"
@@ -75,6 +78,8 @@ class Spikey
 		# command handling
 
 		command(:ping) { |_| "pong" }
+
+		command(:invite) { |_| @client.invite_url }
 
 		command(:help, max_args: 1) { |event, category| help(event, category) }
 

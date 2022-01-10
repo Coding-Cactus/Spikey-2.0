@@ -8,6 +8,14 @@ class Spikey
 
 		return if server == nil
 
+		if server[:mute_role] != nil && server[:muted] != nil && server[:muted].include?(user_id.to_s)
+			begin
+				user.add_role(server[:mute_role])
+			rescue
+				nil
+			end
+		end
+
 		log_channel = server[:log_channel]
 
 		return if log_channel == nil

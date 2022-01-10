@@ -45,7 +45,7 @@ class Spikey
 					end
 
 					unless log_channel == nil
-						begin							
+						begin
 							@client.send_message(log_channel,
 								nil,
 								false,

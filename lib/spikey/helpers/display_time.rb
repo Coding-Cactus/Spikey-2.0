@@ -1,6 +1,6 @@
 class Spikey
 	def display_time(time, date: true)
-		return "Indefinate" if time == nil
+		return "Indefinite" if time == nil
 
 		time = time.to_f
 		
