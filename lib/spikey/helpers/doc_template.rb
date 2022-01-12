@@ -11,7 +11,8 @@ class Spikey
 			auto_strike: 0,
 			mute_role: nil,
 			muted: {},
-			warn_mute: nil
+			warn_mute: nil,
+			strike_mute: nil
 		}
 	end
 end

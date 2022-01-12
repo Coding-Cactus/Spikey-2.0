@@ -50,6 +50,8 @@ class Spikey
 		
 		log_channel = server_data[:mod_log_channel]
 		warn_mute   = server_data[:warn_mute]
+		strike_mute = server_data[:strike_mute]
+		auto_struck = auto_banned = false
 	
 		
 		# message in channel & logs
@@ -121,6 +123,8 @@ class Spikey
 		auto_ban    = server_data[:auto_ban]
 		
 		if auto_strike != 0 && infractions[:warns].length % auto_strike == 0
+			auto_struck = true
+			
 			begin
 				member.pm.send_embed(
 					nil,
@@ -164,6 +168,7 @@ class Spikey
 		strike_count = infractions[:strikes].length + (auto_strike == 0 ? 0 : infractions[:warns].length / auto_strike)
 
 		if auto_ban != 0 && strike_count >= auto_ban
+			auto_banned = true
 			begin
 				server.ban(member_id, 0, reason: "Automatically banned for reaching the strike limit.")
 				
@@ -198,8 +203,13 @@ class Spikey
 		end
 
 		
-
-		mute(event, member_id, "#{warn_mute}s") if warn_mute != nil
+		return if auto_banned
+		
+		if auto_struck && strike_mute != nil
+			mute(event, member_id, "#{strike_mute}s")
+		elsif warn_mute != nil
+			mute(event, member_id, "#{warn_mute}s")
+		end
 		
 		return
 	end

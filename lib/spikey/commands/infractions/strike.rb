@@ -50,6 +50,7 @@ class Spikey
 		server_data = @servers.find({ _id: server_id }).first
 		
 		log_channel = server_data[:mod_log_channel]
+		strike_mute = server_data[:strike_mute]
 		
 		# message in channel & logs
 		
@@ -148,6 +149,8 @@ class Spikey
 					nil
 				end
 			end
+		else
+			mute(event, member_id, "#{strike_mute}s") if strike_mute != nil
 		end
 	
 		return

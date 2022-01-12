@@ -17,6 +17,7 @@ require_relative "spikey/commands/configuration/config_mod_logs"
 require_relative "spikey/commands/configuration/config_auto_ban"
 require_relative "spikey/commands/configuration/config_auto_strike"
 require_relative "spikey/commands/configuration/config_warn_mute"
+require_relative "spikey/commands/configuration/config_strike_mute"
 
 require_relative "spikey/commands/infractions/warn"
 require_relative "spikey/commands/infractions/strike"
@@ -93,6 +94,7 @@ class Spikey
 		command(:config_auto_strike, max_args: 1) { |event, count| config_auto_strike(event, count) }
 		
 		command(:config_warn_mute, max_args: 1) { |event, duration| config_warn_mute(event, duration) }
+		command(:config_strike_mute, max_args: 1) { |event, duration| config_strike_mute(event, duration) }
 
 		command(:warn, min_args: 1)   { |event, user, *reason|  warn(event, user, reason.join(" "))  }
 		command(:strike, min_args: 1) { |event, user, *reason| strike(event, user, reason.join(" ")) }
