@@ -10,7 +10,8 @@ class Spikey
 			auto_ban: 0,
 			auto_strike: 0,
 			mute_role: nil,
-			muted: {}
+			muted: {},
+			warn_mute: nil
 		}
 	end
 end

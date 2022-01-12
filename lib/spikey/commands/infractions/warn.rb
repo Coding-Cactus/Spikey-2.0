@@ -49,6 +49,7 @@ class Spikey
 		server_data = @servers.find({ _id: server_id }).first
 		
 		log_channel = server_data[:mod_log_channel]
+		warn_mute   = server_data[:warn_mute]
 	
 		
 		# message in channel & logs
@@ -195,6 +196,10 @@ class Spikey
 				end
 			end
 		end
+
+		
+
+		mute(event, member_id, "#{warn_mute}s") if warn_mute != nil
 		
 		return
 	end

@@ -1,5 +1,7 @@
 class Spikey
 	def parse_time(duration)
+		return 0 if duration == nil
+		
 		duration.downcase!
 		
 		unit = duration[-1]
