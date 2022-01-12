@@ -55,10 +55,10 @@ class Spikey
 		server_data = @servers.find({ _id: event.server.id }).first
 		infractions = server_data[:infractions][user.id.to_s]
 
-		warnings = infractions == nil ? [] : infractions[:warns]
-		strikes  = infractions == nil ? [] : infractions[:strikes]
+		warnings = infractions == nil ? {} : infractions[:warns]
+		strikes  = infractions == nil ? {} : infractions[:strikes]
 
-		if warnings == [] && strikes == nil
+		if warnings == {} && strikes == {}
 			embed.add_field(name: "Overview", value: "No infractions!")
 
 			begin
