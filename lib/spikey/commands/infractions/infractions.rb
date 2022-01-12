@@ -43,10 +43,9 @@ class Spikey
 			)
 		end
 
-		title = "#{user.username}'s Infractions"
 		
 		embed = Discordrb::Webhooks::Embed.new(
-			title: title,
+			title: "#{user.username}'s Infractions",
 			colour: "00cc00".to_i(16),
 			timestamp: Time.new,
 			footer: Discordrb::Webhooks::EmbedFooter.new(text: "Page 1"),
@@ -55,9 +54,22 @@ class Spikey
 
 		server_data = @servers.find({ _id: event.server.id }).first
 		infractions = server_data[:infractions][user.id.to_s]
-		
-		warnings = infractions[:warns]
-		strikes  = infractions[:strikes]
+
+		warnings = infractions == nil ? [] : infractions[:warns]
+		strikes  = infractions == nil ? [] : infractions[:strikes]
+
+		if warnings == [] && strikes == nil
+			embed.add_field(name: "Overview", value: "No infractions!")
+
+			begin
+				event.user.pm.send_embed(nil, embed)
+			rescue
+				return event.send_message("Unable to message you.")
+			end			
+			
+			return event.send_message("Check your DMs :wink:")
+		end
+	
 		
 		auto_strike = server_data[:auto_strike]
 
