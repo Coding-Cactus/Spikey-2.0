@@ -127,7 +127,11 @@ class Spikey
 		begin
 			member.pm.send_embed(nil, embed)
 		rescue
-			event.send_message("Unable to message user.")
+			begin
+				event.send_message("Unable to message user.")
+			rescue
+				nil
+			end
 		end
 
 		@servers.update_one({ _id: server_id }, { "$set" => { "muted.#{member.id}" => end_time } })
