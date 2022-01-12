@@ -22,14 +22,26 @@ GEM
     mime-types-data (3.2021.1115)
     mongo (2.17.0)
       bson (>= 4.8.2, < 5.0.0)
+    mustermann (1.1.1)
+      ruby2_keywords (~> 0.0.1)
     netrc (0.11.0)
     opus-ruby (1.0.1)
       ffi
+    rack (2.2.3)
+    rack-protection (2.1.0)
+      rack
     rest-client (2.1.0)
       http-accept (>= 1.7.0, < 2.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
+    ruby2_keywords (0.0.5)
+    sinatra (2.1.0)
+      mustermann (~> 1.0)
+      rack (~> 2.2)
+      rack-protection (= 2.1.0)
+      tilt (~> 2.0)
+    tilt (2.0.10)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8)
@@ -44,6 +56,7 @@ PLATFORMS
 DEPENDENCIES
   discordrb (~> 3.4)
   mongo (~> 2.17)
+  sinatra (~> 2.1)
 
 BUNDLED WITH
-   2.1.4
+   2.2.22
