@@ -3,3 +3,4 @@
 replit.nix
 .bundle/
 test.rb
+register_commands.rb

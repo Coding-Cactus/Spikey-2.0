@@ -1,5 +1,5 @@
 class Spikey
-	def help(event, category)
+	def help(event, category, slash_command: false, select_menu: false)
 		lowered_category = category == nil ? nil : category.downcase
 	
 		case lowered_category
@@ -153,14 +153,40 @@ class Spikey
 			)
 		else
 			embed = Discordrb::Webhooks::Embed.new(
-				title: "Infraction Commands",
+				title: "Category Not Found",
 				colour: "cc0000".to_i(16),
 				description: "Category **#{category}** not found.",
 				timestamp: Time.new,
 				footer: Discordrb::Webhooks::EmbedFooter.new(text: "Do **#{PREFIX}help category** to view a certain category")
 			)
 		end
-	
-		event.send_embed("", embed)
+
+		if slash_command
+			event.respond(embeds: [embed]) do |_, view|
+				view.row do |r|
+					r.select_menu(custom_id: "help_select:#{event.user.id}", placeholder: lowered_category == nil ? "Select category" : category) do |s|
+						s.option(label: "Configuration", value: "Configuration")
+						s.option(label: "Infractions", value: "Infractions")
+						s.option(label: "Repealing", value: "Repealing")
+						s.option(label: "Muting", value: "Muting")
+						s.option(label: "Member", value: "Member")
+					end
+				end
+			end
+		elsif select_menu
+			event.update_message(embeds: [embed]) do |_, view|
+				view.row do |r|
+					r.select_menu(custom_id: "help_select:#{event.user.id}", placeholder: lowered_category == nil ? "Select category" : category) do |s|
+						s.option(label: "Configuration", value: "Configuration")
+						s.option(label: "Infractions", value: "Infractions")
+						s.option(label: "Repealing", value: "Repealing")
+						s.option(label: "Muting", value: "Muting")
+						s.option(label: "Member", value: "Member")
+					end
+				end
+			end
+		else
+			event.send_embed("", embed)
+		end
 	end
 end

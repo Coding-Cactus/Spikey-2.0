@@ -1,23 +1,10 @@
 class Spikey
-	def config_strike_mute(event, duration)
+	def config_strike_mute(event, duration, slash_command: false)
 		embed     = nil
 		server    = event.server
 		server_id = server.id
+		duration  = parse_time(duration)
 
-		unless event.author.defined_permission?(:administrator) || server.owner == event.user
-			return event.send_embed(
-				"",
-				Discordrb::Webhooks::Embed.new(
-					title: "Insufficient Permissions!",
-					description: "You must be an administrator to use the configuration commands.",
-					colour: "cc0000".to_i(16),
-					timestamp: Time.new
-				)
-			)
-		end
-	
-		duration = parse_time(duration)
-	
 		if duration == nil
 			embed = Discordrb::Webhooks::Embed.new(
 					title: "Invalid Duration!",
@@ -45,6 +32,10 @@ class Spikey
 			@servers.update_one({ _id: server_id }, { "$set" => { strike_mute: duration } })
 		end
 
-		event.send_embed("", embed)
+		if slash_command
+			event.respond(embeds: [embed])
+		else
+			event.send_embed(nil, embed)
+		end
 	end
 end

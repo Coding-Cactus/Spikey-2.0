@@ -1,21 +1,8 @@
 class Spikey
-	def config_mute(event, role)
+	def config_mute(event, role, slash_command: false)
 		embed     = nil
 		server    = event.server
 		server_id = server.id
-
-		unless event.author.defined_permission?(:administrator) || server.owner == event.user
-			return event.send_embed(
-				"",
-				Discordrb::Webhooks::Embed.new(
-					title: "Insufficient Permissions!",
-					description: "You must be an administrator to use the configuration commands.",
-					colour: "cc0000".to_i(16),
-					timestamp: Time.new
-				)
-			)
-		end
-		
 
 		if role == nil
 			embed = Discordrb::Webhooks::Embed.new(
@@ -48,6 +35,10 @@ class Spikey
 			end
 		end
 
-		event.send_embed("", embed)
+		if slash_command
+			event.respond(embeds: [embed])
+		else
+			event.send_embed(nil, embed)
+		end
 	end
 end

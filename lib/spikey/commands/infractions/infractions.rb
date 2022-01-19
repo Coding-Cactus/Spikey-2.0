@@ -1,46 +1,45 @@
 class Spikey
-	def infractions(event, user)
-		if event.channel.pm?
-			return event.send_embed(
-				"",
-				Discordrb::Webhooks::Embed.new(
-					title: "Command Unavailable!",
-					description: "You must use this command from within the server you wish to view your infractions from.",
-					colour: "cc0000".to_i(16),
-					timestamp: Time.new
-				)
-			)
-		end
-
+	def infractions(event, user, slash_command: false)
+		embed = nil
 		
-		if user == nil
+		if event.channel.pm?
+			embeds = Discordrb::Webhooks::Embed.new(
+				title: "Command Unavailable!",
+				description: "You must use this command from within the server you wish to view your infractions from.",
+				colour: "cc0000".to_i(16),
+				timestamp: Time.new
+			)
+		elsif user == nil
 			user = event.user
-		elsif event.author.defined_permission?(:administrator) || event.author.defined_permission?(:manage_messages) || event.server.owner == event.user
+		elsif event.user.defined_permission?(:administrator) || event.user.defined_permission?(:manage_messages) || event.server.owner == event.user
 			u = get_member(user, event.server)
 
 			if u == nil
-				return event.send_embed(
-					"",
-					Discordrb::Webhooks::Embed.new(
-						title: "Member not found!",
-						description: "Could not find member **#{user}**",
-						colour: "cc0000".to_i(16),
-						timestamp: Time.new
-					)
+				embed = Discordrb::Webhooks::Embed.new(
+					title: "Member not found!",
+					description: "Could not find member **#{user}**",
+					colour: "cc0000".to_i(16),
+					timestamp: Time.new
 				)
 			end
 
 			user = u
 		else
-			return event.send_embed(
-				"",
-				Discordrb::Webhooks::Embed.new(
-					title: "Insufficient Permissions!",
-					description: "You must be a moderator to view other server members' infractions.",
-					colour: "cc0000".to_i(16),
-					timestamp: Time.new
-				)
+			embed = Discordrb::Webhooks::Embed.new(
+				title: "Insufficient Permissions!",
+				description: "You must be a moderator to view other server members' infractions.",
+				colour: "cc0000".to_i(16),
+				timestamp: Time.new
 			)
+		end
+
+		unless embed == nil
+			if slash_command
+				event.respond(embeds: [embed])
+			else
+				event.send_embed(nil, embed)
+			end
+			return
 		end
 
 		
@@ -63,17 +62,27 @@ class Spikey
 
 			begin
 				event.user.pm.send_embed(nil, embed)
-			rescue
-				return event.send_message("Unable to message you.")
-			end			
+			rescue				
+				if slash_command
+					event.respond(content: "Unable to message you.")
+				else
+					event.send_message("Unable to message you.")
+				end
+				return
+			end
 			
-			return event.send_message("Check your DMs :wink:")
+			if slash_command
+				event.respond(content: "Check your DMs :wink:")
+			else
+				event.send_message("Check your DMs :wink:")
+			end
+			return
 		end
 	
 		
 		auto_strike = server_data[:auto_strike]
 
-		if auto_strike == 0
+		if auto_strike == nil
 			auto_strikes = 0
 			auto_strike_msg = ""
 		else
@@ -83,7 +92,7 @@ class Spikey
 
 		embed.add_field(
 			name: "Overview",
-			value: "Server: **#{event.server.name}**\nWarnings: **#{warnings.length}**\nStrikes: **#{strikes.length + auto_strikes}#{server_data[:auto_ban] == 0 ? "" : "/#{server_data[:auto_ban]}"}**#{auto_strike_msg}"
+			value: "Server: **#{event.server.name}**\nWarnings: **#{warnings.length}**\nStrikes: **#{strikes.length + auto_strikes}#{server_data[:auto_ban] == nil ? "" : "/#{server_data[:auto_ban]}"}**#{auto_strike_msg}"
 		)
 		
 		
@@ -132,9 +141,18 @@ class Spikey
 				event.user.pm.send_embed(nil, embed)
 			end
 		
-			return event.send_message("Check your DMs :wink:")
+			
+			if slash_command
+				event.respond(content: "Check your DMs :wink:")
+			else
+				event.send_message("Check your DMs :wink:")
+			end
 		rescue
-			event.send_message("Unable to message you.")
+			if slash_command
+				event.respond(content: "Unable to message you.")
+			else
+				event.send_message("Unable to message you.")
+			end
 		end
 	end	
 end

@@ -1,21 +1,8 @@
 class Spikey
-	def config_mod_logs(event, channel)
+	def config_mod_logs(event, channel, slash_command: false)
 		embed     = nil
 		server    = event.server
 		server_id = server.id
-
-		unless event.author.defined_permission?(:administrator) || server.owner == event.user
-			return event.send_embed(
-				"",
-				Discordrb::Webhooks::Embed.new(
-					title: "Insufficient Permissions!",
-					description: "You must be an administrator to use the configuration commands.",
-					colour: "cc0000".to_i(16),
-					timestamp: Time.new
-				)
-			)
-		end
-		
 
 		if channel == nil
 			embed = Discordrb::Webhooks::Embed.new(
@@ -44,10 +31,14 @@ class Spikey
 					timestamp: Time.new
 				)
 
-				@servers.update_one({ _id: server_id }, { "$set" => { log_channel: c.id } })
+				@servers.update_one({ _id: server_id }, { "$set" => { mod_log_channel: c.id } })
 			end
 		end
 
-		event.send_embed("", embed)
+		if slash_command
+			event.respond(embeds: [embed])
+		else
+			event.send_embed(nil, embed)
+		end
 	end
 end
