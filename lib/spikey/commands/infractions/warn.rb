@@ -186,5 +186,7 @@ class Spikey
 				nil
 			end
 		end
+	
+		return
 	end
 end

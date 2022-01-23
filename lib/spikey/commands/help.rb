@@ -188,5 +188,7 @@ class Spikey
 		else
 			event.send_embed("", embed)
 		end
+	
+		return
 	end
 end

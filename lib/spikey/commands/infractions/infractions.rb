@@ -154,5 +154,7 @@ class Spikey
 				event.send_message("Unable to message you.")
 			end
 		end
+	
+		return
 	end	
 end

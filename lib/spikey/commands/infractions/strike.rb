@@ -134,5 +134,7 @@ class Spikey
 		rescue
 			nil
 		end
+	
+		return
 	end
 end

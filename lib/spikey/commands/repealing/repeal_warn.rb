@@ -60,5 +60,7 @@ class Spikey
 		else
 			event.send_embed(nil, embed)
 		end
+	
+		return
 	end
 end

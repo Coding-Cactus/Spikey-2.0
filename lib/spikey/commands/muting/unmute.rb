@@ -94,6 +94,8 @@ class Spikey
 			event.respond(embeds: [embed])
 		else
 			event.send_embed(nil, embed)
-		end		
+		end
+	
+		return
 	end
 end
