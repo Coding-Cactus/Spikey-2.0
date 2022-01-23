@@ -1,5 +1,5 @@
 class Spikey
-	def strike(event, user, reason, slash_command: true)
+	def strike(event, user, reason, slash_command: false)
 		server     = event.server
 		server_id  = server.id	
 		member     = get_member(user, server)		

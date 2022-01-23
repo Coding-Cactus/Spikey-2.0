@@ -1,5 +1,5 @@
 class Spikey
-	def unmute(event, user, slash_command: true)
+	def unmute(event, user, slash_command: false)
 		server    = event.server
 		server_id = server.id
 		member    = get_member(user, server)
