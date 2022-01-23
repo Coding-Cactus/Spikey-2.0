@@ -51,6 +51,7 @@ class Spikey
 			prefix: PREFIX,
 			ignore_bots: true,
 			help_command: false,
+			invite_command: false,
 			spaces_allowed: true,
 			command_doesnt_exist_message: "Could not find command **`%command%`**"
 		)
@@ -84,6 +85,7 @@ class Spikey
 		# command handling
 
 		command(:ping) { |_| "pong :ping_pong:" }
+		command(:invite_url) { |_| "https://discord.com/api/oauth2/authorize?client_id=928255064290762752&permissions=0&scope=bot%20applications.commands" }
 
 		command(:invite) { |_| @client.invite_url }
 
@@ -114,6 +116,7 @@ class Spikey
 		# slash commands
 
 		slash_command(:ping) { |event| event.respond(content: "pong :ping_pong:") }
+		slash_command(:invite) { |event| event.respond(content: "https://discord.com/api/oauth2/authorize?client_id=928255064290762752&permissions=0&scope=bot%20applications.commands") }
 
 		slash_command(:help) { |event| help(event, event.options["category"], slash_command: true) }
 		select_menu("help_select") { |event| help(event, event.values[0], select_menu: true) }
