@@ -39,10 +39,15 @@ class Spikey
       @bot_started = true
       
   		Thread.new do
-  			loop do
-  				check_mutes
-  				sleep 10
-  			end
+        begin
+    			loop do
+    				check_mutes
+    				sleep 10
+    			end
+        rescue
+          sleep 20
+          @bot_started = false
+        end
   		end
     end
 	end
