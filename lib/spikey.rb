@@ -67,6 +67,7 @@ class Spikey
 
 		# event handling
 
+    @bot_started = false
 		@client.ready { ready }
 
 		@client.server_create { |event| joined_server(event) }
